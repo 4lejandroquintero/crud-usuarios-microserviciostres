@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: msvc-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: users
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v3/user/**
+        - id: tasks
+          uri: http://localhost:9090
+          predicates:
+            - Path=/api/v3/tasks/**
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+jwt:
+  secret: "miClaveSuperSecreta"
