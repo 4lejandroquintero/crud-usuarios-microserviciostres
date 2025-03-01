@@ -22,5 +22,9 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     cache: false
-jwt:
-  secret: "miClaveSuperSecreta"
+  main:
+    allow-bean-definition-overriding: true
+
+security:
+  jwt:
+    secret: "Mv2tZ5J8rQ!p$Xs9B@L#C7&Nf^W0"

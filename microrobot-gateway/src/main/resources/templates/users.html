@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <a href="/api/v3/tasks/admin/all" class="btn btn-primary">Ir a Tareas</a>
+    <title>Lista de Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Lista de Usuarios</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.fullName}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <a th:href="@{/api/v3/user/delete/{id}(id=${user.id})}" class="btn btn-danger">Eliminar</a>
+                <a th:href="@{/api/v3/user/edit/{id}(id=${user.id})}" class="btn btn-warning">Editar</a>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Agregar Usuario</h2>
+    <form th:action="@{/api/v3/user}" method="post" th:object="${userDTO}">
+    <div class="mb-3">
+            <label for="fullName" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="roles" class="form-label">Roles (separados por coma)</label>
+            <input type="text" class="form-control" id="roles" name="roles">
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+</div>
+</body>
+</html>
