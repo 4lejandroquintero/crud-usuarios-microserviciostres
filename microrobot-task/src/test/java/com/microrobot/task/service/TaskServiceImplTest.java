@@ -1,13 +1,9 @@
-package com.microservice.task.service;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+package com.microrobot.task.service;
 
-import com.microservice.task.entities.Task;
-import com.microservice.task.entities.TaskStatus;
-import com.microservice.task.exception.EntityNotFoundException;
-import com.microservice.task.persistence.ITaskRepository;
-import com.microservice.task.service.TaskServiceImpl;
-
+import com.microrobot.task.entities.Task;
+import com.microrobot.task.entities.TaskStatus;
+import com.microrobot.task.exception.entities.EntityNotFoundException;
+import com.microrobot.task.persistence.ITaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +12,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class TaskServiceImplTest {
 

@@ -1,7 +1,7 @@
-package com.microservice.task.controller;
+package com.microrobot.task.controller;
 
-import com.microservice.task.entities.Task;
-import com.microservice.task.service.TaskServiceImpl;
+import com.microrobot.task.entities.Task;
+import com.microrobot.task.service.TaskServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +13,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskControllerTest {
