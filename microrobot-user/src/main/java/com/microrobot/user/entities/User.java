@@ -7,14 +7,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,4 +87,38 @@ public class User {
     public void setRoles(Set<RolUser> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> (GrantedAuthority) () -> "ROLE_" + role.name()) // Convierte los roles a GrantedAuthority
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email; // Usamos email en lugar de username
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // Puedes cambiarlo si manejas expiración de cuentas
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // Puedes cambiarlo si manejas bloqueo de cuentas
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // Puedes cambiarlo si manejas expiración de credenciales
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // Puedes cambiarlo si manejas habilitación de cuentas
+    }
+
+
 }

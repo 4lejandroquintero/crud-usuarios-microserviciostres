@@ -1,9 +1,9 @@
-package com.microservice.user.service;
+package com.microrobot.user.service;
 
-import com.microservice.user.entities.RolUser;
-import com.microservice.user.entities.User;
-import com.microservice.user.exception.entities.EntityNotFoundException;
-import com.microservice.user.persistence.UserRepository;
+import com.microrobot.user.entities.RolUser;
+import com.microrobot.user.entities.User;
+import com.microrobot.user.exception.entities.EntityNotFoundException;
+import com.microrobot.user.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,9 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {

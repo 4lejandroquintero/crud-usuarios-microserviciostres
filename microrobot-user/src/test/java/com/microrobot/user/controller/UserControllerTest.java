@@ -1,8 +1,8 @@
-package com.microservice.user.controller;
+package com.microrobot.user.controller;
 
-import com.microservice.user.entities.RolUser;
-import com.microservice.user.entities.User;
-import com.microservice.user.service.IUserService;
+import com.microrobot.user.entities.RolUser;
+import com.microrobot.user.entities.User;
+import com.microrobot.user.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
