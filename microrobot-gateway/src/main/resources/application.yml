@@ -14,6 +14,8 @@ spring:
           uri: http://localhost:8090
           predicates:
             - Path=/api/v3/user/**
+          filters:
+            - RewritePath=/api/v3/user/(?<segment>.*), /$\{segment}
         - id: tasks
           uri: http://localhost:9090
           predicates:

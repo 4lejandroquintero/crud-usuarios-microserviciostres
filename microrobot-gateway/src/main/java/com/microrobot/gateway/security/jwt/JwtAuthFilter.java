@@ -30,15 +30,17 @@ public class JwtAuthFilter implements GatewayFilter {
             return exchange.getResponse().setComplete();
         }
 
-        try {
-            token = token.substring(7);
-            String username = jwtUtil.extractUsername(token);
-            request.mutate().header("X-User", username).build();
-        } catch (Exception e) {
+        token = token.substring(7);
+        if (!jwtUtil.validateToken(token)) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
-        return chain.filter(exchange);
+        ServerHttpRequest modifiedRequest = request.mutate()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .build();
+
+        return chain.filter(exchange.mutate().request(modifiedRequest).build());
+
     }
 }
