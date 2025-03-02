@@ -14,3 +14,10 @@ spring:
       ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  feign:
+    client:
+      config:
+        default:
+          requestInterceptors:
+            - com.microrobot.user.config.FeignClientInterceptor

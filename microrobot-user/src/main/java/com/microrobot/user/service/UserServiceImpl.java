@@ -5,11 +5,14 @@ import com.microrobot.user.entities.User;
 import com.microrobot.user.exception.entities.EntityNotFoundException;
 import com.microrobot.user.persistence.UserRepository;
 import com.microrobot.user.security.dto.AuthDTO;
+import com.microrobot.user.security.dto.RegisterDTO;
 import com.microrobot.user.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -69,12 +72,22 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public String register(AuthDTO authDTO) {
-        User user = new User();
-        user.setEmail(authDTO.getPassword());
-        user.setPassword(passwordEncoder.encode(authDTO.getPassword()));
-        userRepository.save(user);
-        return "User registered successfully!";
+    public String register(RegisterDTO registerDTO) {
+        User newUser = new User();
+        newUser.setFullName(registerDTO.getFullName());
+        newUser.setEmail(registerDTO.getEmail());
+        newUser.setPassword(registerDTO.getPassword());
+        newUser.setRoles(registerDTO.getRoles() != null ? registerDTO.getRoles() : new HashSet<>());
+
+        newUser.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+
+        newUser.setRoles(registerDTO.getRoles() != null ? registerDTO.getRoles() : new HashSet<>());
+
+        userRepository.save(newUser);
+
+        System.out.println("User generated with Id: " + newUser.getId());
+
+        return "Successfully registered user";
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.microrobot.user.security.controller;
 
 import com.microrobot.user.security.dto.AuthDTO;
+import com.microrobot.user.security.dto.RegisterDTO;
 import com.microrobot.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ public class AuthController {
     private IUserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody AuthDTO authDTO) {
-        return ResponseEntity.ok(userService.register(authDTO));
+    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
+        return ResponseEntity.ok(userService.register(registerDTO));
     }
 
     @PostMapping("/login")
