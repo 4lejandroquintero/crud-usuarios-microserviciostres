@@ -12,7 +12,12 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
 - [Ejecución de Pruebas Unitarias](#ejecución-de-pruebas-unitarias)
 
 ## Requisitos Previos
-Aquí va el contenido de los requisitos previos...
+<details>
+  <summary>Ver Requisitos Previos</summary>
+
+  ### Requisitos Previos
+  Aquí va el contenido de los requisitos previos...
+</details>
 
 ## Instrucciones de Compilación y Ejecución
 Aquí va el contenido de las instrucciones de compilación y ejecución...
