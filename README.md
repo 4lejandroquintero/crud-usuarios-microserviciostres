@@ -53,7 +53,12 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
   <summary>Ver Configuración de la Base de Datos PostgreSQL</summary>
 
   ### Configuración de la Base de Datos PostgreSQL
-  Aquí va el contenido de la configuración de la base de datos...
+  La aplicación requiere una base de datos PostgreSQL configurada con las siguientes características:
+
+      - Nombre de la base de datos: microrobot-microservicio
+      - Usuario: usuario
+      - Contraseña: contraseña
+En los archivos application.yml de los microservicios User y Task se encuentran estas configuraciones de la BD.
 </details>
 
 ## Descripción de la Arquitectura
@@ -69,7 +74,22 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
   <summary>Ver Ejecución de Pruebas Unitarias</summary>
 
   ### Ejecución de Pruebas Unitarias
-  Aquí va el contenido de la ejecución de pruebas unitarias...
+  Para garantizar la calidad y funcionalidad del código, se han implementado pruebas unitarias utilizando JUnit y Mockito.
+
+  Para ejecutar las pruebas unitarias, sigue estos pasos:
+
+      - Compilar la aplicación y ejecutar las pruebas:
+
+          - mvn clean test
+          
+Este comando compilará el código y ejecutará todas las pruebas unitarias. Los resultados de las pruebas se mostrarán en la consola y se generarán informes en el directorio <strong>target/surefire-reports.</strong>
+
+### Verificar la cobertura de pruebas:
+
+Para verificar la cobertura de las pruebas, puedes utilizar herramientas como JaCoCo. Ejecuta el siguiente comando para generar un informe de cobertura:
+
+          - mvn jacoco:report
+El informe se generará en target/site/jacoco/index.html y podrás abrirlo en tu navegador para revisar qué partes del código están cubiertas por las pruebas.
 </details>
 
 
