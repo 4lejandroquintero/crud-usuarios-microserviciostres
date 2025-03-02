@@ -1,25 +1,34 @@
 package com.microrobot.user.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microrobot.user.entities.RolUser;
 import com.microrobot.user.entities.User;
 import com.microrobot.user.service.IUserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Mock
     private IUserService iUserService;
@@ -27,16 +36,29 @@ public class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user = new User(
+                1L,
+                "Alejandro Quintero",
+                "alejandro@example.com",
+                "SecurePass123",
+                Set.of(RolUser.EDITOR)
+        );
+    }
+
     @Test
     void testGetAllUsers() {
-        // Configura el mock
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(iUserService.findAll()).thenReturn(mockUsers);
 
-        // Ejecuta el método
         ResponseEntity<List<User>> response = userController.getAllUsers();
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
         verify(iUserService, times(1)).findAll();
@@ -44,30 +66,24 @@ public class UserControllerTest {
 
     @Test
     void testSaveUser() {
-        // Configura el mock
         User mockUser = new User();
-        mockUser.setFullName("John Doe");
+        mockUser.setFullName("Alejandro Quintero");
         when(iUserService.save(mockUser)).thenReturn(mockUser);
 
-        // Ejecuta el método
         ResponseEntity<User> response = userController.saveUser(mockUser);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("John Doe", response.getBody().getFullName());
+        assertEquals("Alejandro Quintero", response.getBody().getFullName());
         verify(iUserService, times(1)).save(mockUser);
     }
 
     @Test
     void testFinAllUsers() {
-        // Configura el mock
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(iUserService.findAll()).thenReturn(mockUsers);
 
-        // Ejecuta el método
         ResponseEntity<?> response = userController.finAllUsers();
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, ((List<User>) response.getBody()).size());
         verify(iUserService, times(1)).findAll();
@@ -75,67 +91,55 @@ public class UserControllerTest {
 
     @Test
     void testFindById() {
-        // Configura el mock
         Long userId = 1L;
         User mockUser = new User();
         mockUser.setId(userId);
-        mockUser.setFullName("John Doe");
+        mockUser.setFullName("Alejandro Quintero");
         when(iUserService.findById(userId)).thenReturn(mockUser);
 
-        // Ejecuta el método
         ResponseEntity<?> response = userController.findById(userId);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userId, ((User) response.getBody()).getId());
-        assertEquals("John Doe", ((User) response.getBody()).getFullName());
+        assertEquals("Alejandro Quintero", ((User) response.getBody()).getFullName());
         verify(iUserService, times(1)).findById(userId);
     }
 
     @Test
     void testUpdateUser() {
-        // Configura el mock
         Long userId = 1L;
         User mockUser = new User();
         mockUser.setId(userId);
-        mockUser.setFullName("John Doe");
+        mockUser.setFullName("Alejandro Quintero");
         when(iUserService.updateUser(userId, mockUser)).thenReturn(mockUser);
 
-        // Ejecuta el método
         ResponseEntity<User> response = userController.updateUser(userId, mockUser);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userId, response.getBody().getId());
-        assertEquals("John Doe", response.getBody().getFullName());
+        assertEquals("Alejandro Quintero", response.getBody().getFullName());
         verify(iUserService, times(1)).updateUser(userId, mockUser);
     }
 
     @Test
     void testDeleteUser() {
-        // Configura el mock
         Long userId = 1L;
         doNothing().when(iUserService).deleteUser(userId);
 
-        // Ejecuta el método
         ResponseEntity<Void> response = userController.deleteUser(userId);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(iUserService, times(1)).deleteUser(userId);
     }
 
     @Test
     void testGetUsersByRoles() {
-        // Configura el mock
         RolUser role = RolUser.ADMIN;
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(iUserService.getUsersByRoles(role)).thenReturn(mockUsers);
 
-        // Ejecuta el método
         ResponseEntity<List<User>> response = userController.getUsersByRoles(role);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
         verify(iUserService, times(1)).getUsersByRoles(role);

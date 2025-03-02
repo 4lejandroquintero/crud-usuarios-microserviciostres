@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -91,33 +90,33 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> (GrantedAuthority) () -> "ROLE_" + role.name()) // Convierte los roles a GrantedAuthority
+                .map(role -> (GrantedAuthority) () -> "ROLE_" + role.name())
                 .collect(Collectors.toSet());
     }
 
     @Override
     public String getUsername() {
-        return this.email; // Usamos email en lugar de username
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Puedes cambiarlo si manejas expiración de cuentas
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Puedes cambiarlo si manejas bloqueo de cuentas
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Puedes cambiarlo si manejas expiración de credenciales
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Puedes cambiarlo si manejas habilitación de cuentas
+        return true;
     }
 
 

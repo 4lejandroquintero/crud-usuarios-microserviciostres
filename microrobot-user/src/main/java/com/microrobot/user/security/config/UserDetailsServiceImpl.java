@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository; // Asegúrate de tener este repositorio
-
+    private UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), // Usamos email en lugar de username
+                user.getEmail(),
                 user.getPassword(),
-                user.getAuthorities() // Asegúrate de que `getAuthorities()` devuelve los roles correctamente
+                user.getAuthorities()
         );
     }
 }

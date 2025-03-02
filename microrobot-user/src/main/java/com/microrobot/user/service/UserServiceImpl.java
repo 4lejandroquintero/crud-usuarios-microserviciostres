@@ -37,7 +37,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public User save(User user) {
-        return userRepository.save(user); // Retornar el usuario guardado
+        return userRepository.save(user);
     }
 
 

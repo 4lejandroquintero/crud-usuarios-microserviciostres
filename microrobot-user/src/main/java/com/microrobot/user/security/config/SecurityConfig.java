@@ -1,6 +1,5 @@
 package com.microrobot.user.security.config;
 
-import com.microrobot.user.persistence.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

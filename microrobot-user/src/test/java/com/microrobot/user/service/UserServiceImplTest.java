@@ -4,6 +4,7 @@ import com.microrobot.user.entities.RolUser;
 import com.microrobot.user.entities.User;
 import com.microrobot.user.exception.entities.EntityNotFoundException;
 import com.microrobot.user.persistence.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,132 +23,160 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
     @Mock
-    private UserRepository userRepository; // Simula el UserRepository
+    private UserRepository userRepository;
 
     @InjectMocks
-    private UserServiceImpl userService; // Inyecta el mock en UserService
+    private UserServiceImpl userService;
+
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user = new User(
+                1L,
+                "Alejandro Quintero",
+                "alejandro@example.com",
+                "SecurePass123",
+                Set.of(RolUser.EDITOR)
+        );
+    }
+
+    @Test
+    void getUserById_ExistingUser_ReturnsUser() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        User foundUser = userService.findById(1L);
+
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(user.getEmail(), foundUser.getEmail());
+    }
+
+    @Test
+    void getUserById_NonExistingUser_ThrowsException() {
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> userService.findById(99L));
+    }
+
+    @Test
+    void getAllUsers_ReturnsUserList() {
+        when(userRepository.findAll()).thenReturn(List.of(user));
+
+        List<User> users = userService.findAll();
+
+        assertEquals(1, users.size());
+        assertEquals(user.getId(), users.get(0).getId());
+    }
+
+    @Test
+    void createUser_SavesUserSuccessfully() {
+        when(userRepository.save(user)).thenReturn(user);
+
+        User savedUser = userService.save(user);
+
+        assertNotNull(savedUser);
+        assertEquals(user.getEmail(), savedUser.getEmail());
+    }
 
     @Test
     void testFindById_UserExists() {
-        // 1. Configura el comportamiento del mock
         Long userId = 1L;
         User mockUser = new User();
         mockUser.setId(userId);
-        mockUser.setFullName("John Doe");
+        mockUser.setFullName("Alejandro Quintero");
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
 
-        // 2. Ejecuta el método a probar
         User result = userService.findById(userId);
 
-        // 3. Verifica el resultado
         assertNotNull(result);
         assertEquals(userId, result.getId());
-        assertEquals("John Doe", result.getFullName());
+        assertEquals("Alejandro Quintero", result.getFullName());
 
-        // 4. Verifica que el método del repositorio fue llamado
         verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
     void testFindById_UserNotFound() {
-        // 1. Configura el comportamiento del mock para lanzar una excepción
         Long userId = 99L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // 2. Ejecuta el método a probar y verifica que lanza la excepción
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             userService.findById(userId);
         });
 
-        // 3. Verifica el mensaje de la excepción
         assertEquals("User not found with id: " + userId, exception.getMessage());
 
-        // 4. Verifica que el método del repositorio fue llamado
         verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
     void testFindAll() {
-        // Configura el mock
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(userRepository.findAll()).thenReturn(mockUsers);
 
-        // Ejecuta el método
         List<User> result = userService.findAll();
 
-        // Verifica el resultado
         assertEquals(2, result.size());
         verify(userRepository, times(1)).findAll();
     }
 
     @Test
     void testSave() {
-        // Configura el mock
         User mockUser = new User();
-        mockUser.setFullName("John Doe");
+        mockUser.setFullName("Alejandro Quintero");
         when(userRepository.save(mockUser)).thenReturn(mockUser);
 
-        // Ejecuta el método
         User result = userService.save(mockUser);
 
-        // Verifica el resultado
         assertNotNull(result);
-        assertEquals("John Doe", result.getFullName());
+        assertEquals("Alejandro Quintero", result.getFullName());
         verify(userRepository, times(1)).save(mockUser);
     }
 
     @Test
     void testUpdateUser() {
-        // Configura el mock
         Long userId = 1L;
         User existingUser = new User();
         existingUser.setId(userId);
-        existingUser.setFullName("Old Name");
+        existingUser.setFullName("Old Alejandro Quintero");
 
         User updatedUser = new User();
-        updatedUser.setFullName("New Name");
-        updatedUser.setEmail("new@example.com");
+        updatedUser.setFullName("New Alejandro Quintero");
+        updatedUser.setEmail("alejonew@gmail.com");
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         when(userRepository.save(existingUser)).thenReturn(existingUser);
 
-        // Ejecuta el método
         User result = userService.updateUser(userId, updatedUser);
 
-        // Verifica el resultado
         assertNotNull(result);
-        assertEquals("New Name", result.getFullName());
-        assertEquals("new@example.com", result.getEmail());
+        assertEquals("New Alejandro Quintero", result.getFullName());
+        assertEquals("alejonew@gmail.com", result.getEmail());
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, times(1)).save(existingUser);
     }
 
     @Test
     void testDeleteUser() {
-        // Configura el mock
         Long userId = 1L;
         when(userRepository.existsById(userId)).thenReturn(true);
 
-        // Ejecuta el método
         userService.deleteUser(userId);
 
-        // Verifica que el método fue llamado
         verify(userRepository, times(1)).deleteById(userId);
     }
 
     @Test
     void testDeleteUser_NotFound() {
-        // Configura el mock para lanzar una excepción
         Long userId = 99L;
         when(userRepository.existsById(userId)).thenReturn(false);
 
-        // Verifica que se lanza la excepción
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             userService.deleteUser(userId);
         });
 
-        // Verifica el mensaje de la excepción
         assertEquals("User not found with id: " + userId, exception.getMessage());
         verify(userRepository, times(1)).existsById(userId);
         verify(userRepository, never()).deleteById(userId);
@@ -154,15 +184,12 @@ public class UserServiceImplTest {
 
     @Test
     void testGetUsersByRoles() {
-        // Configura el mock
         RolUser role = RolUser.ADMIN;
         List<User> mockUsers = Arrays.asList(new User(), new User());
         when(userRepository.findByRoles(role)).thenReturn(mockUsers);
 
-        // Ejecuta el método
         List<User> result = userService.getUsersByRoles(role);
 
-        // Verifica el resultado
         assertEquals(2, result.size());
         verify(userRepository, times(1)).findByRoles(role);
     }
