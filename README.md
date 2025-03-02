@@ -58,6 +58,7 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
       - Nombre de la base de datos: microrobot-microservicio
       - Usuario: usuario
       - Contraseña: contraseña
+      
 En los archivos application.yml de los microservicios User y Task se encuentran estas configuraciones de la BD.
 </details>
 
@@ -66,7 +67,69 @@ En los archivos application.yml de los microservicios User y Task se encuentran 
   <summary>Ver Descripción de la Arquitectura</summary>
 
   ### Descripción de la Arquitectura
-  Aquí va el contenido de la descripción de la arquitectura...
+  La aplicación está diseñada siguiendo una arquitectura de microservicios, donde cada componente es independiente y se comunica con los demás a través de interfaces bien definidas. Esto permite una mayor escalabilidad, mantenibilidad y resiliencia en el sistema.
+
+En esta arquitectura, los servicios individuales manejan funcionalidades específicas y se comunican entre sí mediante solicitudes HTTP RESTful. Para facilitar esta interacción y brindar una experiencia unificada, se utiliza un API Gateway, que centraliza todas las peticiones hacia los microservicios y expone una única interfaz para los clientes.
+
+### Microservicios Principales
+### 1. Servicio de Usuarios (User Service)
+Gestiona todas las operaciones relacionadas con los usuarios del sistema, incluyendo:
+
+      - Registro de usuarios
+      - Consulta de perfiles
+      - Actualización de datos
+      - Eliminación de cuentas
+      - Relación de usuarios con tareas
+      
+Este servicio interactúa directamente con la base de datos PostgreSQL para almacenar y recuperar información.
+
+### 2. Servicio de Tareas (Task Service)
+Se encarga de gestionar las tareas asociadas a los usuarios y proporciona funcionalidades como:
+
+      - Creación de tareas
+      - Asignación de tareas a usuarios
+      - Actualización del estado de tareas
+      - Eliminación de tareas
+      
+También interactúa con PostgreSQL, permitiendo la persistencia de las tareas y su relación con los usuarios.
+
+### 3. API Gateway (Gateway Service)
+El API Gateway es un componente clave en la arquitectura de microservicios, ya que centraliza las solicitudes de los clientes y las redirige al microservicio correspondiente.
+
+### Funciones principales del Gateway:
+✅ <strong>Unificar Endpoints:</strong>  En lugar de exponer múltiples URLs para cada microservicio, el API Gateway proporciona una única dirección para todas las peticiones.
+✅ <strong>Balanceo de Carga:</strong> Puede distribuir el tráfico entre múltiples instancias de un microservicio si hay escalado horizontal.
+✅ <strong>Seguridad y Autenticación:</strong> Puede gestionar autenticación con JWT y validar accesos antes de reenviar las solicitudes.
+✅ <strong>Manejo de Errores y Timeouts:</strong> Si un microservicio falla o se ralentiza, el API Gateway puede gestionar respuestas adecuadas.
+✅ <strong>Redirección de Rutas:</strong> Define reglas de enrutamiento para que las peticiones sean enviadas al microservicio correcto.
+
+Ejemplo de cómo el Gateway expone un solo punto de acceso:
+
+Servicio	Endpoint Directo	Endpoint a través del API Gateway
+
+      - User Service	/user	/api/v3/user
+      - Task Service	/tasks	/api/v3/tasks
+      
+El cliente solo interactúa con /api/, mientras que el API Gateway reenvía las solicitudes al microservicio correspondiente.
+
+### Comunicación entre Microservicios
+La comunicación entre los microservicios se realiza mediante llamadas HTTP RESTful, utilizando el API Gateway como intermediario.
+
+1️⃣ Un cliente envía una solicitud a http://localhost:8080/api/v3/tasks
+2️⃣ El API Gateway redirige la petición al Task Service en http://localhost:9090/v3/tasks
+3️⃣ El Task Service procesa la solicitud y devuelve la respuesta al Gateway
+4️⃣ El API Gateway responde al cliente con los datos obtenidos
+
+Esta estrategia facilita el desarrollo, ya que los clientes solo interactúan con un punto de entrada común, sin necesidad de conocer las direcciones individuales de cada microservicio.
+
+### Seguridad y Autenticación
+La aplicación implementa seguridad basada en tokens JWT, de la siguiente manera:
+🔐 El usuario inicia sesión en el User Service y recibe un token JWT
+🔐 Para cada petición posterior, el token JWT se envía en los headers
+🔐 El API Gateway verifica el token y solo permite solicitudes válidas
+🔐 Los microservicios pueden validar el token antes de procesar la solicitud
+
+Esto garantiza que solo usuarios autenticados puedan acceder a ciertos recursos del sistema.
 </details>
 
 ## Ejecución de Pruebas Unitarias
