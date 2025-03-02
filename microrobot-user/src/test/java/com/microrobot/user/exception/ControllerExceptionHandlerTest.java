@@ -1,5 +1,6 @@
 package com.microrobot.user.exception;
 
+import com.microrobot.user.dto.response.ExceptionDto;
 import com.microrobot.user.exception.entities.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,20 +18,20 @@ public class ControllerExceptionHandlerTest {
     void handleUserNotFoundException_ReturnsNotFoundStatus() {
         UserNotFoundException ex = new UserNotFoundException("User not found");
 
-        ResponseEntity<String> response = handler.handleUserNotFoundException(ex);
+        ResponseEntity<ExceptionDto> response = handler.handleUserNotFoundException(ex);
 
         assertEquals(404, response.getStatusCode().value());
-        assertEquals("User not found", response.getBody());
+        assertEquals("User not found", response.getBody().getMessage());
     }
 
     @Test
     void handleGeneralException_ReturnsInternalServerError() {
         Exception ex = new Exception("Unexpected error");
 
-        ResponseEntity<String> response = handler.handleGeneralException(ex);
+        ResponseEntity<ExceptionDto> response = handler.handleUnknownException(ex);
 
         assertEquals(500, response.getStatusCode().value());
-        assertEquals("An unexpected error occurred: Unexpected error", response.getBody());
+        assertEquals("internal_error", response.getBody().getMessage());
     }
 }
 

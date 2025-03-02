@@ -43,6 +43,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<RolUser> roles;
 
+    public User(Long id, String fullName) {
+        this.id = id;
+        this.fullName = fullName;
+    }
+
     public boolean hasRole(RolUser role) {
         return roles.contains(role);
     }

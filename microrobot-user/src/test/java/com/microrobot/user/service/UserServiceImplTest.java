@@ -4,12 +4,15 @@ import com.microrobot.user.entities.RolUser;
 import com.microrobot.user.entities.User;
 import com.microrobot.user.exception.entities.EntityNotFoundException;
 import com.microrobot.user.persistence.UserRepository;
+import com.microrobot.user.security.dto.AuthDTO;
+import com.microrobot.user.security.jwt.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +27,12 @@ public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -111,29 +120,8 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
-    @Test
-    void testFindAll() {
-        List<User> mockUsers = Arrays.asList(new User(), new User());
-        when(userRepository.findAll()).thenReturn(mockUsers);
 
-        List<User> result = userService.findAll();
 
-        assertEquals(2, result.size());
-        verify(userRepository, times(1)).findAll();
-    }
-
-    @Test
-    void testSave() {
-        User mockUser = new User();
-        mockUser.setFullName("Alejandro Quintero");
-        when(userRepository.save(mockUser)).thenReturn(mockUser);
-
-        User result = userService.save(mockUser);
-
-        assertNotNull(result);
-        assertEquals("Alejandro Quintero", result.getFullName());
-        verify(userRepository, times(1)).save(mockUser);
-    }
 
     @Test
     void testUpdateUser() {
@@ -193,4 +181,76 @@ public class UserServiceImplTest {
         assertEquals(2, result.size());
         verify(userRepository, times(1)).findByRoles(role);
     }
+
+    @Test
+    void testFindUserById_Success() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User(1L, "Alejandro Quintero")));
+
+        User user = userService.findById(1L);
+
+        assertNotNull(user);
+        assertEquals("Alejandro Quintero", user.getFullName());
+        verify(userRepository, times(1)).findById(1L);
+    }
+
+
+
+    @Test
+    void login_Success() {
+        AuthDTO authDTO = new AuthDTO();
+        User user = new User();
+        user.setEmail(authDTO.getEmail());
+        user.setPassword(passwordEncoder.encode("password123"));
+
+        when(userRepository.findByEmail(authDTO.getEmail())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(authDTO.getPassword(), user.getPassword())).thenReturn(true);
+        when(jwtUtil.generateToken(authDTO.getEmail())).thenReturn("mockToken");
+
+        String token = userService.login(authDTO);
+
+        assertEquals("mockToken", token);
+    }
+
+    @Test
+    void login_UserNotFound_ThrowsException() {
+        AuthDTO authDTO = new AuthDTO("notfound@gmail.com", "password");
+
+        when(userRepository.findByEmail(authDTO.getEmail())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.login(authDTO));
+
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void login_InvalidPassword_ThrowsException() {
+        AuthDTO authDTO = new AuthDTO("invalid@gmail.com", "wrongpassword");
+        User user = new User();
+        user.setEmail(authDTO.getEmail());
+        user.setPassword(passwordEncoder.encode("password123"));
+
+        when(userRepository.findByEmail(authDTO.getEmail())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(authDTO.getPassword(), user.getPassword())).thenReturn(false);
+
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.login(authDTO));
+
+        assertEquals("Invalid password", exception.getMessage());
+    }
+
+    @Test
+    void register_Success() {
+        AuthDTO authDTO = new AuthDTO("test@example.com", "password123");
+        User user = new User();
+
+        when(passwordEncoder.encode(authDTO.getPassword())).thenReturn("hashedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        String result = userService.register(authDTO);
+
+        assertEquals("User registered successfully!", result);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+
 }
+

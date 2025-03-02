@@ -4,6 +4,7 @@ import com.microrobot.user.dto.response.ExceptionDto;
 import com.microrobot.user.exception.entities.EntityNotFoundException;
 import com.microrobot.user.exception.entities.OperationNotAllowedException;
 import com.microrobot.user.exception.entities.UserNotFoundException;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class ControllerExceptionHandler {
         LOGGER.error("Internal error", e);
         ExceptionDto exceptionDto = new ExceptionDto(
                 "internal_error",
-                Collections.singletonList(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                Collections.singletonList("An unexpected error occurred")
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionDto);
     }
@@ -38,7 +39,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         List<String> errors = e.getBindingResult().getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .map(error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Unknown validation error")
                 .collect(Collectors.toList());
 
         ExceptionDto exceptionDto = new ExceptionDto("Validation errors have occurred", errors);
@@ -48,7 +49,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionDto> handleConstraintViolationException(ConstraintViolationException e) {
         List<String> errors = e.getConstraintViolations().stream()
-                .map(violation -> violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 
         ExceptionDto exceptionDto = new ExceptionDto("Validation errors have occurred", errors);
@@ -57,7 +58,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ExceptionDto> validationException(ValidationException e) {
-        ExceptionDto exceptionDto = new ExceptionDto(e.getMessage());
+        ExceptionDto exceptionDto = new ExceptionDto(e.getMessage() != null ? e.getMessage() : "Validation error occurred");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
     }
 
@@ -80,13 +81,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<ExceptionDto> handleUserNotFoundException(UserNotFoundException e) {
+        ExceptionDto exceptionDto = new ExceptionDto(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDto);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado: " + e.getMessage());
-    }
-
 }
