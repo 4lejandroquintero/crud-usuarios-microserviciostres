@@ -9,5 +9,4 @@ class MicrorobotTaskApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

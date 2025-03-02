@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,5 +86,103 @@ class TaskServiceImplTest {
     void deleteTask_ShouldThrowException_WhenNotExists() {
         when(taskRepository.existsById(1L)).thenReturn(false);
         assertThrows(EntityNotFoundException.class, () -> taskService.deleteTask(1L));
+    }
+
+    @Test
+    void testGetAllTasks_ShouldReturnTasksList() {
+        Task task1 = new Task(1L, "Task 1", "Description 1", 101L, TaskStatus.ASIGNADA);
+        Task task2 = new Task(2L, "Task 2", "Description 2", 102L, TaskStatus.EN_PROCESO);
+
+        when(taskRepository.findAll()).thenReturn(Arrays.asList(task1, task2));
+
+        List<Task> tasks = taskService.getAllTasks();
+
+        assertEquals(2, tasks.size());
+        verify(taskRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testGetTaskById_WhenTaskExists_ShouldReturnTask() {
+        Task task = new Task(1L, "Task 1", "Description 1", 101L, TaskStatus.ASIGNADA);
+
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+
+        Task foundTask = taskService.getTaskById(1L);
+
+        assertNotNull(foundTask);
+        assertEquals(1L, foundTask.getId());
+        verify(taskRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetTaskById_WhenTaskNotExists_ShouldThrowException() {
+        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> taskService.getTaskById(1L));
+        assertEquals("Task not found with id: 1", thrown.getMessage());
+        verify(taskRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testCreateTask_ShouldReturnCreatedTask() {
+        Task newTask = new Task(null, "New Task", "New Description", 103L, TaskStatus.ASIGNADA);
+        Task savedTask = new Task(1L, "New Task", "New Description", 103L, TaskStatus.ASIGNADA);
+
+        when(taskRepository.save(newTask)).thenReturn(savedTask);
+
+        Task result = taskService.createTask(newTask);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        verify(taskRepository, times(1)).save(newTask);
+    }
+
+    @Test
+    void testUpdateTask_WhenTaskExists_ShouldUpdateAndReturnTask() {
+        Task existingTask = new Task(1L, "Old Title", "Old Description", 104L, TaskStatus.EN_PROCESO);
+        Task updatedTaskData = new Task(1L, "Updated Title", "Updated Description", 104L, TaskStatus.FINALIZADA);
+
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(any(Task.class))).thenReturn(updatedTaskData);
+
+        Task result = taskService.updateTask(1L, updatedTaskData);
+
+        assertEquals("Updated Title", result.getTitle());
+        assertEquals("Updated Description", result.getDescription());
+        assertEquals(TaskStatus.FINALIZADA, result.getStatus());
+        verify(taskRepository, times(1)).save(any(Task.class));
+    }
+
+    @Test
+    void testDeleteTask_WhenTaskExists_ShouldDeleteTask() {
+        when(taskRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(taskRepository).deleteById(1L);
+
+        assertDoesNotThrow(() -> taskService.deleteTask(1L));
+
+        verify(taskRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteTask_WhenTaskNotExists_ShouldThrowException() {
+        when(taskRepository.existsById(1L)).thenReturn(false);
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> taskService.deleteTask(1L));
+        assertEquals("Task not found with id: 1", thrown.getMessage());
+        verify(taskRepository, never()).deleteById(anyLong());
+    }
+
+    @Test
+    void testGetTasksByUserId_ShouldReturnUserTasks() {
+        Task task1 = new Task(1L, "Task 1", "Description 1", 105L, TaskStatus.ASIGNADA);
+        Task task2 = new Task(2L, "Task 2", "Description 2", 105L, TaskStatus.EN_PROCESO);
+
+        when(taskRepository.findByAssignedUserId(105L)).thenReturn(Arrays.asList(task1, task2));
+
+        List<Task> userTasks = taskService.getTasksByUserId(105L);
+
+        assertEquals(2, userTasks.size());
+        assertEquals(105L, userTasks.get(0).getAssignedUserId());
+        verify(taskRepository, times(1)).findByAssignedUserId(105L);
     }
 }

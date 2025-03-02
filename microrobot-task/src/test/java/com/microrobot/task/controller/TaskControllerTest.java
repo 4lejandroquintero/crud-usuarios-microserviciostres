@@ -1,23 +1,51 @@
 package com.microrobot.task.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microrobot.task.entities.Task;
+import com.microrobot.task.service.ITaskService;
 import com.microrobot.task.service.TaskServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import com.microrobot.task.entities.TaskStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureMockMvc(addFilters = false)
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TaskControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Mock
+    private ITaskService iTaskService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     @Mock
     private TaskServiceImpl taskService;
@@ -25,16 +53,19 @@ public class TaskControllerTest {
     @InjectMocks
     private TaskController taskController;
 
+    @BeforeEach
+    void setup() {
+        assertNotNull(mockMvc, "MockMvc no debe ser nulo");
+        assertNotNull(objectMapper, "ObjectMapper no debe ser nulo");
+    }
+
     @Test
     void testGetAllTasks() {
-        // Configura el mock
         List<Task> mockTasks = Arrays.asList(new Task(), new Task());
         when(taskService.getAllTasks()).thenReturn(mockTasks);
 
-        // Ejecuta el método
         ResponseEntity<List<Task>> response = taskController.getAllTasks();
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
         verify(taskService, times(1)).getAllTasks();
@@ -42,17 +73,14 @@ public class TaskControllerTest {
 
     @Test
     void testGetTaskById() {
-        // Configura el mock
         Long taskId = 1L;
         Task mockTask = new Task();
         mockTask.setId(taskId);
         mockTask.setTitle("Task 1");
         when(taskService.getTaskById(taskId)).thenReturn(mockTask);
 
-        // Ejecuta el método
         ResponseEntity<Task> response = taskController.getTaskById(taskId);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(taskId, response.getBody().getId());
         assertEquals("Task 1", response.getBody().getTitle());
@@ -61,15 +89,12 @@ public class TaskControllerTest {
 
     @Test
     void testCreateTask() {
-        // Configura el mock
         Task mockTask = new Task();
         mockTask.setTitle("New Task");
         when(taskService.createTask(mockTask)).thenReturn(mockTask);
 
-        // Ejecuta el método
         ResponseEntity<Task> response = taskController.createTask(mockTask);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("New Task", response.getBody().getTitle());
         verify(taskService, times(1)).createTask(mockTask);
@@ -77,17 +102,14 @@ public class TaskControllerTest {
 
     @Test
     void testUpdateTask() {
-        // Configura el mock
         Long taskId = 1L;
         Task mockTask = new Task();
         mockTask.setId(taskId);
         mockTask.setTitle("Updated Task");
         when(taskService.updateTask(taskId, mockTask)).thenReturn(mockTask);
 
-        // Ejecuta el método
         ResponseEntity<Task> response = taskController.updateTask(taskId, mockTask);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(taskId, response.getBody().getId());
         assertEquals("Updated Task", response.getBody().getTitle());
@@ -96,33 +118,25 @@ public class TaskControllerTest {
 
     @Test
     void testDeleteTask() {
-        // Configura el mock
         Long taskId = 1L;
         doNothing().when(taskService).deleteTask(taskId);
 
-        // Ejecuta el método
         ResponseEntity<Void> response = taskController.deleteTask(taskId);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(taskService, times(1)).deleteTask(taskId);
     }
 
     @Test
     void testGetTasksByUserId() {
-        // Configura el mock
         Long userId = 1L;
         List<Task> mockTasks = Arrays.asList(new Task(), new Task());
         when(taskService.getTasksByUserId(userId)).thenReturn(mockTasks);
 
-        // Ejecuta el método
         ResponseEntity<List<Task>> response = taskController.getTasksByUserId(userId);
 
-        // Verifica el resultado
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
         verify(taskService, times(1)).getTasksByUserId(userId);
     }
-
-
 }

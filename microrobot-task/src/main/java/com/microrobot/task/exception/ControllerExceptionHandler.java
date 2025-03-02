@@ -1,6 +1,5 @@
 package com.microrobot.task.exception;
 
-
 import com.microrobot.task.dto.response.ExceptionDto;
 import com.microrobot.task.exception.entities.EntityNotFoundException;
 import com.microrobot.task.exception.entities.OperationNotAllowedException;
@@ -78,5 +77,4 @@ public class ControllerExceptionHandler {
         ExceptionDto exceptionDto = new ExceptionDto(e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionDto);
     }
-
 }
