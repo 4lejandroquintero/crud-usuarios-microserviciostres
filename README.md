@@ -11,37 +11,17 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
 - [Descripción de la Arquitectura](#descripción-de-la-arquitectura)
 - [Ejecución de Pruebas Unitarias](#ejecución-de-pruebas-unitarias)
 
-<details>
-  <summary>Ver Requisitos Previos</summary>
+## Requisitos Previos
+Aquí va el contenido de los requisitos previos...
 
-  ### Requisitos Previos
-  Aquí va el contenido de los requisitos previos...
-</details>
+## Instrucciones de Compilación y Ejecución
+Aquí va el contenido de las instrucciones de compilación y ejecución...
 
-<details>
-  <summary>Ver Instrucciones de Compilación y Ejecución</summary>
+## Configuración de la Base de Datos PostgreSQL
+Aquí va el contenido de la configuración de la base de datos...
 
-  ### Instrucciones de Compilación y Ejecución
-  Aquí va el contenido de las instrucciones de compilación y ejecución...
-</details>
+## Descripción de la Arquitectura
+Aquí va el contenido de la descripción de la arquitectura...
 
-<details>
-  <summary>Ver Configuración de la Base de Datos PostgreSQL</summary>
-
-  ### Configuración de la Base de Datos PostgreSQL
-  Aquí va el contenido de la configuración de la base de datos...
-</details>
-
-<details>
-  <summary>Ver Descripción de la Arquitectura</summary>
-
-  ### Descripción de la Arquitectura
-  Aquí va el contenido de la descripción de la arquitectura...
-</details>
-
-<details>
-  <summary>Ver Ejecución de Pruebas Unitarias</summary>
-
-  ### Ejecución de Pruebas Unitarias
-  Aquí va el contenido de la ejecución de pruebas unitarias...
-</details>
+## Ejecución de Pruebas Unitarias
+Aquí va el contenido de la ejecución de pruebas unitarias...
