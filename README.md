@@ -16,7 +16,12 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
   <summary>Ver Requisitos Previos</summary>
 
   ### Requisitos Previos
-  Aquí va el contenido de los requisitos previos...
+  Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
+
+    - JDK 11 o superior
+    - Maven 3.6.0 o superior
+    - Docker (opcional, para ejecutar la base de datos PostgreSQL en un contenedor)
+    - PostgreSQL 12 o superior
 </details>
 
 ## Instrucciones de Compilación y Ejecución
@@ -24,7 +29,23 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
   <summary>Ver Instrucciones de Compilación y Ejecución</summary>
 
   ### Instrucciones de Compilación y Ejecución
-  Aquí va el contenido de las instrucciones de compilación y ejecución...
+  Sigue estos pasos para compilar y ejecutar la aplicación:
+  
+    ## 1. Clonar el repositorio:
+    - git clone https://github.com/4lejandroquintero/crud-usuarios-microserviciostres.git
+    - cd crud-usuarios-microserviciostres
+
+    ## 2. Clonar el repositorio:
+    - mvn clean install
+
+    ## 3. Configurar y ejecutar la base de datos PostgreSQL
+    - Instalar PostgreSQL localmente, descarga e instala la versión adecuada para tu sistema operativo desde la página oficial. Luego, crea una base de datos y un usuario con los permisos necesarios.
+      
+     ## 4. Configurar las variables de entorno
+    - La aplicación utiliza variables de entorno para la configuración de la base de datos. Asegúrate de establecer las siguientes variables antes de ejecutar la aplicación:
+        export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/microrobot-microservicio
+        export SPRING_DATASOURCE_USERNAME=usuario
+        export SPRING_DATASOURCE_PASSWORD=contraseña
 </details>
 
 ## Configuración de la Base de Datos PostgreSQL
