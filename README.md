@@ -10,6 +10,7 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
 - [Configuración de la Base de Datos PostgreSQL](#configuración-de-la-base-de-datos-postgresql)
 - [Descripción de la Arquitectura](#descripción-de-la-arquitectura)
 - [Ejecución de Pruebas Unitarias](#ejecución-de-pruebas-unitarias)
+- [Endpoints](#endpoints)
 
 ## Requisitos Previos
 <details>
@@ -153,6 +154,29 @@ Para verificar la cobertura de las pruebas, puedes utilizar herramientas como Ja
 
           - mvn jacoco:report
 El informe se generará en target/site/jacoco/index.html y podrás abrirlo en tu navegador para revisar qué partes del código están cubiertas por las pruebas.
+</details>
+
+## Endpoints
+<details>
+  <summary>Ver Endpoints</summary>
+
+  ### Endpoints Principales
+  ## USER
+      - REGISTER - POST : http://localhost:8080/api/v3/user/auth/register
+      - LOGIN - POST : http://localhost:8080/api/v3/user/auth/login
+      - GETALLUSERS - GET : http://localhost:8080/api/v3/user/admin/all
+      - GETUSERBYID - GET : http://localhost:8080/api/v3/user/search/{iduser}
+      - UPDATE - PUT : http://localhost:8080/api/v3/user/update/1
+      - DELETE - DELETE : http://localhost:8080/api/v1/user/delete/{iduser}
+      - GETUSERROL - GET : http://localhost:8080/api/v1/user/search-by-role/EDITOR
+  ## TASK
+      - CREATE - POST : http://localhost:8080/api/v1/tasks/create
+      - GETALLTASK - GET : http://localhost:8080/api/v1/tasks/admin/all
+      - GETTASKBYID - GET : http://localhost:8080/api/v1/tasks/{id}
+      - UPDATE - PUT : http://localhost:8080/api/v1/tasks/update/{id}
+      - DELETE - DELETE : http://localhost:8080/api/v1/tasks/delete/{id}
+      - GETTASKBYUSERID - GET : http://localhost:8080/api/v1/tasks/user/{userId}
+  
 </details>
 
 
