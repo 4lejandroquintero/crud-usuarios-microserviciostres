@@ -21,11 +21,12 @@ spring:
           predicates:
             - Path=/api/v3/tasks/**
   thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
-    cache: false
-  main:
-    allow-bean-definition-overriding: true
+    thymeleaf:
+      prefix: classpath:/templates/
+      suffix: .html
+      web:
+        resources:
+          static-locations: classpath:/static/
 
 security:
   jwt:

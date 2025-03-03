@@ -13,10 +13,12 @@ public class GatewayConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(auth -> auth
-                        .pathMatchers("/auth/**").permitAll()
-                        .pathMatchers("/api/v3/user/admin/all").permitAll()
-                        .anyExchange().permitAll()
+                        .pathMatchers("/", "/auth/login", "/auth/register", "/css/**", "/js/**", "/images/**").permitAll()
+                        .pathMatchers("/api/**").permitAll()
+                        .anyExchange().authenticated()
                 )
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .build();
     }
 }

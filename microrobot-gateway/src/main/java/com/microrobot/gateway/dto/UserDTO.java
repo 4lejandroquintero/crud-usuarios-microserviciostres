@@ -1,6 +1,5 @@
 package com.microrobot.gateway.dto;
 
-
 import java.util.List;
 
 public class UserDTO {

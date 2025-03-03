@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class JwtUtil {
 
     @Value("${security.jwt.secret}")
-    private String secretKey; // Se obtiene del application.yml
+    private String secretKey;
 
     public Claims extractClaims(String token) {
         return Jwts.parserBuilder()

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "users", url = "http://localhost:8090/api/v3/user")
+@FeignClient(name = "users", url = "http://localhost:8090/api/v3/user", configuration = FeignConfig.class)
 public interface UserClient {
 
     @GetMapping("/admin/all")

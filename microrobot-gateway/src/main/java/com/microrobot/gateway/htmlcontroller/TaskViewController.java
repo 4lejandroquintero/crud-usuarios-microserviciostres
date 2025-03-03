@@ -2,9 +2,7 @@ package com.microrobot.gateway.htmlcontroller;
 
 import com.microrobot.gateway.client.TaskClient;
 import com.microrobot.gateway.dto.TaskDTO;
-import com.microrobot.gateway.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

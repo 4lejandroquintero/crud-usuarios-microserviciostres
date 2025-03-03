@@ -24,10 +24,10 @@ public class FeignConfig {
             Authentication authentication = securityContext.getAuthentication();
 
             if (authentication != null && authentication.getCredentials() instanceof String token) {
-                System.out.println("Token enviado en Feign: " + token);
+                System.out.println("Token sent in Feign: " + token);
                 requestTemplate.header("Authorization", "Bearer " + token);
             } else {
-                System.out.println("No se encontró un token en el contexto de seguridad.");
+                System.out.println("No token found in security context.");
             }
         };
     }

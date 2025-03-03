@@ -1,6 +1,5 @@
 package com.microrobot.gateway.htmlcontroller;
 
-
 import com.microrobot.gateway.client.UserClient;
 import com.microrobot.gateway.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;

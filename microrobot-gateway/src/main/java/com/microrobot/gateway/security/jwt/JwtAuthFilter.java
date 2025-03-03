@@ -3,7 +3,6 @@ package com.microrobot.gateway.security.jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -41,6 +40,5 @@ public class JwtAuthFilter implements GatewayFilter {
                 .build();
 
         return chain.filter(exchange.mutate().request(modifiedRequest).build());
-
     }
 }

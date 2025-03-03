@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "tasks", url = "http://localhost:8090/api/v3/tasks")
+@FeignClient(name = "tasks", url = "http://localhost:9090/api/v3/tasks")
 public interface TaskClient {
 
     @GetMapping
