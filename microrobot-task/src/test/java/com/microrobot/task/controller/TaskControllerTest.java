@@ -16,8 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import com.microrobot.task.entities.TaskStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
@@ -26,9 +24,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @SpringBootTest
@@ -55,8 +50,8 @@ public class TaskControllerTest {
 
     @BeforeEach
     void setup() {
-        assertNotNull(mockMvc, "MockMvc no debe ser nulo");
-        assertNotNull(objectMapper, "ObjectMapper no debe ser nulo");
+        assertNotNull(mockMvc, "MockMvc must not be null");
+        assertNotNull(objectMapper, "ObjectMapper must not be null");
     }
 
     @Test
