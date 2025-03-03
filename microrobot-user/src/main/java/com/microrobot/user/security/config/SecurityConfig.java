@@ -2,7 +2,6 @@ package com.microrobot.user.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -25,7 +24,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsServiceImpl userDetailsService() {
-        return new UserDetailsServiceImpl(); // Implementación de UserDetailsService
+        return new UserDetailsServiceImpl();
     }
 
     @Bean
@@ -46,7 +45,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/register", "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v3/user/admin/all").hasRole("ADMIN")
+                        .requestMatchers("/api/v3/user/**", "/api/v3/tasks/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v3/tasks/create", "/api/v3/tasks/update/**").hasAuthority("EDITOR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

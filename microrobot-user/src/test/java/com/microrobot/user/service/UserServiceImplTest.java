@@ -5,6 +5,7 @@ import com.microrobot.user.entities.User;
 import com.microrobot.user.exception.entities.EntityNotFoundException;
 import com.microrobot.user.persistence.UserRepository;
 import com.microrobot.user.security.dto.AuthDTO;
+import com.microrobot.user.security.dto.RegisterDTO;
 import com.microrobot.user.security.jwt.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceImplTest {
+class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -120,9 +118,6 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
-
-
-
     @Test
     void testUpdateUser() {
         Long userId = 1L;
@@ -193,8 +188,6 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).findById(1L);
     }
 
-
-
     @Test
     void login_Success() {
         AuthDTO authDTO = new AuthDTO();
@@ -204,7 +197,7 @@ public class UserServiceImplTest {
 
         when(userRepository.findByEmail(authDTO.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(authDTO.getPassword(), user.getPassword())).thenReturn(true);
-        when(jwtUtil.generateToken(authDTO.getEmail())).thenReturn("mockToken");
+        when(jwtUtil.generateToken(user, user.getRoles())).thenReturn("mockToken");
 
         String token = userService.login(authDTO);
 
@@ -239,18 +232,27 @@ public class UserServiceImplTest {
 
     @Test
     void register_Success() {
-        AuthDTO authDTO = new AuthDTO("test@example.com", "password123");
-        User user = new User();
+        Set<RolUser> roles = new HashSet<>();
+        roles.add(RolUser.ADMIN);
 
-        when(passwordEncoder.encode(authDTO.getPassword())).thenReturn("hashedPassword");
+        RegisterDTO registerDTO = new RegisterDTO("Ejemplo prueba", "test@example.com", "password123", roles);
+
+        User user = new User();
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword("hashedPassword");
+        user.setRoles(registerDTO.getRoles());
+
+        when(passwordEncoder.encode(registerDTO.getPassword())).thenReturn("hashedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        String result = userService.register(authDTO);
+        when(jwtUtil.generateToken(any(User.class), any(Set.class))).thenReturn("mockToken");
 
-        assertEquals("User registered successfully!", result);
+        String result = userService.register(registerDTO);
+
+        assertEquals("mockToken", result);
+
         verify(userRepository, times(1)).save(any(User.class));
     }
-
 
 }
 

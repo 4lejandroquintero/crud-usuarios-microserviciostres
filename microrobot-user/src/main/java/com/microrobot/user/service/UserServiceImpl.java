@@ -10,7 +10,6 @@ import com.microrobot.user.security.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +48,6 @@ public class UserServiceImpl implements IUserService{
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
-
         existingUser.setFullName(user.getFullName());
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
@@ -87,7 +85,9 @@ public class UserServiceImpl implements IUserService{
 
         System.out.println("User generated with Id: " + newUser.getId());
 
-        return "Successfully registered user";
+        String token = jwtUtil.generateToken(newUser, registerDTO.getRoles());
+
+        return token;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class UserServiceImpl implements IUserService{
             throw new RuntimeException("Invalid password");
         }
 
-        return jwtUtil.generateToken(authDTO.getEmail());
+        return jwtUtil.generateToken(user, user.getRoles());
     }
 
 }
