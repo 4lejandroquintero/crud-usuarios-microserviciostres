@@ -170,7 +170,7 @@ El informe se generará en target/site/jacoco/index.html y podrás abrirlo en tu
       - DELETE - DELETE : http://localhost:8080/api/v1/user/delete/{iduser}
       - GETUSERROL - GET : http://localhost:8080/api/v1/user/search-by-role/EDITOR
   ## TASK
-      - CREATE - POST : http://localhost:8080/api/v1/tasks/admin/create
+      - CREATE - POST : http://localhost:8080/api/v1/tasks/create
       - GETALLTASK - GET : http://localhost:8080/api/v1/tasks/admin/all
       - GETTASKBYID - GET : http://localhost:8080/api/v1/tasks/{id}
       - UPDATE - PUT : http://localhost:8080/api/v1/tasks/update/{id}
